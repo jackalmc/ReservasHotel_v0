@@ -152,7 +152,7 @@ public class Huesped {
         return iniciales;
     }
 
-    public Huesped(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento){ //todo validado??
+    public Huesped(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento){
         setNombre(nombre);
         setDni(dni);
         setCorreo(correo);
@@ -185,7 +185,7 @@ public class Huesped {
     }
 
     @Override
-    public String toString() {  //todo: falta adaptarlo
+    public String toString() {
         return "nombre="+nombre+ " ("+ getIniciales() +"), DNI="+dni+", correo="+correo+", teléfono="+telefono+", fecha nacimiento="+fechaNacimiento.format(DateTimeFormatter.ofPattern(FORMATO_FECHA));
     }
 }
