@@ -75,7 +75,7 @@ public class Habitacion {
         setPuerta(puerta);
         setPrecio(precio);
         setIdentificador();
-        setTipoHabitacion(TipoHabitacion.SIMPLE); //por defecto??
+        setTipoHabitacion(TipoHabitacion.SIMPLE); //¿¿por defecto??
 
 
     }
