@@ -5,7 +5,7 @@ import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
 import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
 
 public class Habitaciones {
-
+//todo: pasar tests
     private int capacidad;
     private int tamano;
     private Habitacion[] coleccionHabitaciones;
@@ -60,7 +60,7 @@ public class Habitaciones {
             throw new NullPointerException("huesped nulo insertar");
         if (buscarIndice(habitacion)!= -1)
             throw new ArrayStoreException("El huesped ya existe");
-        if (capacidadSuperada(tamano))
+        if (capacidadSuperada(tamano)) //validado para negativo
             throw new ArrayIndexOutOfBoundsException("está completo");
 
         coleccionHabitaciones[tamano] = new Habitacion(habitacion);
@@ -124,7 +124,7 @@ public class Habitaciones {
     }
 
     private void desplazarUnaPosicionHaciaIzquierda(int indice){
-        if (tamanoSuperado(indice))
+        if (tamanoSuperado(indice)) //validado para negativo
             throw new IllegalArgumentException("El indice supera el tamaño");
 
         coleccionHabitaciones[indice-1] = new Habitacion(coleccionHabitaciones[indice]);

@@ -45,7 +45,7 @@ public class Huespedes {
             throw new NullPointerException("huesped nulo insertar");
         if (buscarIndice(huesped)!= -1)
             throw new ArrayStoreException("El huesped ya existe");
-        if (capacidadSuperada(tamano))
+        if (capacidadSuperada(tamano)) //validado para negativo
             throw new ArrayIndexOutOfBoundsException("está completo");
 
         coleccionHuespedes[tamano] = new Huesped(huesped);
@@ -109,7 +109,7 @@ public class Huespedes {
     }
 
     private void desplazarUnaPosicionHaciaIzquierda(int indice){
-        if (tamanoSuperado(indice))
+        if (tamanoSuperado(indice)) //validado para negativo
             throw new IllegalArgumentException("El indice supera el tamaño");
 
         coleccionHuespedes[indice-1] = new Huesped(coleccionHuespedes[indice]);
