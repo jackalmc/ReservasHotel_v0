@@ -11,7 +11,7 @@ public class Huesped {
     private final String ER_TELEFONO = "[0-9]{9}";
     private final String ER_CORREO = "[\\S]+[@][A-Z a-z]+[.][A-Z a-z]+";
     private final String ER_DNI = "([0-9]{8})([A-Z a-z])";
-    public final String FORMATO_FECHA = "dd/MM/yyyy";
+    public static final String FORMATO_FECHA = "dd/MM/yyyy";
     private String nombre;
     private String telefono;
     private String correo;
