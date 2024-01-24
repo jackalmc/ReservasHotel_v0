@@ -3,7 +3,6 @@ package org.iesalandalus.programacion.reservashotel.vista;
 import org.iesalandalus.programacion.reservashotel.dominio.*;
 import org.iesalandalus.programacion.utilidades.Entrada;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
@@ -27,9 +26,9 @@ public class Consola {
         System.out.println(Opcion.MOSTRAR_RESERVAS);
         System.out.println(Opcion.CONSULTAR_DISPONIBILIDAD);
         System.out.println(Opcion.SALIR);
-        System.out.println("---------------");
+        //System.out.println("---------------");
         System.out.println(" ");
-        System.out.print("Elegir la opción deseada: ");
+        //System.out.print("Elegir la opción deseada: ");
     }
 
     public static Opcion elegirOpcion(){
@@ -65,7 +64,7 @@ public class Consola {
         LocalDate fechaNacimiento;
 
 
-        System.out.print("Introduzca el nombre del huésped: ");
+        System.out.println("Introduzca el nombre del huésped: ");
         nombre=Entrada.cadena();
         System.out.println("Introduzca DNI del huésped: ");
         dni=Entrada.cadena();
@@ -83,21 +82,22 @@ public class Consola {
     public static Huesped getHuespedPorDni(){
         System.out.print("Introduzca DNI: ");
         String dni = Entrada.cadena();
-        return new Huesped("Soy Un Dummy", dni, "ningun_sitio@ahí.ong","950000000", LocalDate.of(1990, 9, 9));
+        return new Huesped("Soy Un Dummy", dni, "ningun_sitio@ahi.ong","950000000", LocalDate.of(1990, 9, 9));
     }
 
     public static LocalDate leerFecha(String mensaje){
 
-        Pattern p = Pattern.compile("[0-3]?[0-9]/[0-1]?[0-9]/[1-2][0-9]{3}");
+        Pattern p = Pattern.compile("[0-3][0-9]/[0-1][0-9]/[1-2][0-9]{3}");
         Matcher m;
         DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern(Huesped.FORMATO_FECHA); //GUARDADO PARA OTRAS FECHAS
         m = p.matcher(mensaje);
+
         while(!m.matches()){
 
             System.out.println("Introduzca una fecha válida (dd/MM/yyyy): ");
             mensaje = Entrada.cadena();
-
-        };
+            m = p.matcher(mensaje);
+        }
 
         return LocalDate.parse(mensaje, formatoFecha);
     }
@@ -200,7 +200,7 @@ public class Consola {
         fechaInicio=leerFecha(Entrada.cadena());
         System.out.println("-|Fecha de salida|-");
         fechaFin=leerFecha(Entrada.cadena());
-        System.out.print("Introduce cuantas personas: ");
+        System.out.println("Introduce cuantas personas: ");
         numeroPersonas=Entrada.entero();
 
         return new Reserva(huesped, habitacion, regimen, fechaInicio, fechaFin, numeroPersonas);

@@ -4,15 +4,17 @@ package org.iesalandalus.programacion.reservashotel.negocio;
 import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
 import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
 
+import javax.naming.OperationNotSupportedException;
+
 public class Habitaciones {
-//todo: pasar tests
+
     private int capacidad;
     private int tamano;
     private Habitacion[] coleccionHabitaciones;
 
     public Habitaciones(int capacidad){
         if (capacidad < 1)
-            throw new IllegalArgumentException("La capacidad no puede ser negativa");
+            throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
 
         coleccionHabitaciones = new Habitacion[capacidad];
         this.capacidad = capacidad;
@@ -24,7 +26,7 @@ public class Habitaciones {
     }
     public Habitacion[] get(TipoHabitacion tipoHabitacion){
         if (coleccionHabitaciones==null)
-            throw new NullPointerException("coleccion no creada aún");
+            throw new NullPointerException("La colección no ha sido creada aún");
 
         Habitacion[] copiaEspecial = new Habitacion[this.capacidad];
 
@@ -37,7 +39,7 @@ public class Habitaciones {
 
     private Habitacion[] copiaProfundaHabitaciones(){
         if (coleccionHabitaciones==null)
-            throw new NullPointerException("coleccion no creada aún");
+            throw new NullPointerException("La colección no ha sido creada aún");
 
         Habitacion[] copia = new Habitacion[this.capacidad];
 
@@ -55,13 +57,13 @@ public class Habitaciones {
         return tamano;
     }
 
-    public void insertar(Habitacion habitacion){
+    public void insertar(Habitacion habitacion)throws OperationNotSupportedException{
         if (habitacion == null)
-            throw new NullPointerException("huesped nulo insertar");
+            throw new NullPointerException("ERROR: No se puede insertar una habitación nula.");
         if (buscarIndice(habitacion)!= -1)
-            throw new ArrayStoreException("El huesped ya existe");
+            throw new OperationNotSupportedException("ERROR: Ya existe una habitación con ese identificador.");
         if (capacidadSuperada(tamano)) //validado para negativo
-            throw new ArrayIndexOutOfBoundsException("está completo");
+            throw new OperationNotSupportedException("ERROR: No se aceptan más habitaciones.");
 
         coleccionHabitaciones[tamano] = new Habitacion(habitacion);
         tamano++;
@@ -69,7 +71,7 @@ public class Habitaciones {
 
     private int buscarIndice(Habitacion habitacion) {
         if (habitacion == null)
-            throw new NullPointerException("Habitacion nulo buscarindice");
+            throw new NullPointerException("La habitación no puede ser nula (buscarIndice)");
 
         int indice = -1;
 
@@ -83,20 +85,20 @@ public class Habitaciones {
 
     private boolean tamanoSuperado(int indice){
         if (indice < 0)
-            throw new IllegalArgumentException("indice no puede ser negativo");
-        return (indice>=tamano);
+            throw new IllegalArgumentException("El índice no puede ser negativo(tamaño)");
+        return (indice>tamano);
     }
 
     private boolean capacidadSuperada(int indice){
         if (indice < 0)
-            throw new IllegalArgumentException("indice no puede ser negativo(capacidad)");
+            throw new IllegalArgumentException("El índice no puede ser negativo(capacidad)");
 
-        return (indice==capacidad);
+        return (indice>=capacidad);
     }
 
     public Habitacion buscar(Habitacion habitacion){
         if (habitacion == null)
-            throw new NullPointerException("Habitacion es nuuuuuulo buscar");
+            throw new NullPointerException("No se puede buscar una habitación nula");
 
         if (buscarIndice(habitacion) != -1)
             return coleccionHabitaciones[buscarIndice(habitacion)];
@@ -105,11 +107,11 @@ public class Habitaciones {
 
     }
 
-    public void borrar(Habitacion habitacion){
+    public void borrar(Habitacion habitacion)throws OperationNotSupportedException{
         if (habitacion == null)
-            throw new NullPointerException("Habitacion nulo borrar");
+            throw new NullPointerException("ERROR: No se puede borrar una habitación nula.");
         if (buscarIndice(habitacion) == -1)
-            throw new IllegalArgumentException("El Habitacion no está guardado");
+            throw new OperationNotSupportedException("ERROR: No existe ninguna habitación como la indicada.");
 
         int posicionBorrado = buscarIndice(habitacion);
 

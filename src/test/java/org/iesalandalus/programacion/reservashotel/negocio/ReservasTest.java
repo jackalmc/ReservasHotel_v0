@@ -1,6 +1,7 @@
 package org.iesalandalus.programacion.reservashotel.negocio;
 
 
+import org.iesalandalus.programacion.reservashotel.MainApp;
 import org.iesalandalus.programacion.reservashotel.dominio.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -79,7 +80,7 @@ public class ReservasTest {
     private static final String ERROR_RESERVA_BORRAR_NO_EXISTE = "ERROR: No existe ninguna reserva como la indicada.";
     private static final String ERROR_BORRAR_RESERVA_NULA = "ERROR: No se puede borrar una reserva nula.";
     private static final String RESERVAS_HUESPED_NULO="Debería haber saltado una excepción indicando que no se puede operar con un huésped nulo.";
-    private static final String ERROR_RESERVAS_HUESPED_NULO="ERROR: No se pueden buscar reservas de un huesped nulo.";
+    private static final String ERROR_RESERVAS_HUESPED_NULO= "ERROR: No se pueden buscar reservas de un huesped nulo.";
     private static final String RESERVAS_TIPO_HABITACION_NULA="Debería haber saltado una excepción indicando que no se puede operar con un tipo de habitación nula.";
     private static final String ERROR_RESERVAS_TIPO_HABITACION_NULA="ERROR: No se pueden buscar reservas de un tipo de habitación nula.";
     private static final String RESERVAS_HABITACION_NULA="Debería haber saltado una excepción indicando que no se puede operar con una habitación nula.";

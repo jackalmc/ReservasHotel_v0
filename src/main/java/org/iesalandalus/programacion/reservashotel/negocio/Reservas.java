@@ -5,6 +5,7 @@ import org.iesalandalus.programacion.reservashotel.dominio.Huesped;
 import org.iesalandalus.programacion.reservashotel.dominio.Reserva;
 import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
 
+import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ public class Reservas {
 
     public Reservas(int capacidad){
         if (capacidad < 1)
-            throw new IllegalArgumentException("La capacidad no puede ser negativa");
+            throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
 
         coleccionReservas = new Reserva[capacidad];
         this.capacidad = capacidad;
@@ -28,7 +29,7 @@ public class Reservas {
 
     private Reserva[] copiaProfundaReservas(){
         if (coleccionReservas==null)
-            throw new NullPointerException("coleccion no creada aún");
+            throw new NullPointerException("La colección no ha sido creada aún");
 
         Reserva[] copia = new Reserva[this.capacidad];
         for (int i=0; i < tamano; i++){
@@ -45,13 +46,13 @@ public class Reservas {
         return tamano;
     }
 
-    public void insertar(Reserva reserva){
+    public void insertar(Reserva reserva) throws OperationNotSupportedException{
         if (reserva == null)
-            throw new NullPointerException("reserva nulo insertar");
-        if (buscarIndice(reserva)!= -1)
-            throw new ArrayStoreException("El reserva ya existe");
+            throw new NullPointerException("ERROR: No se puede insertar una reserva nula.");
+        if (buscarIndice(reserva) != -1)
+            throw new OperationNotSupportedException("ERROR: Ya existe una reserva igual.");
         if (capacidadSuperada(tamano)) //validado para negativo
-            throw new ArrayIndexOutOfBoundsException("está completo");
+            throw new OperationNotSupportedException("ERROR: No se aceptan más reservas.");
 
         coleccionReservas[tamano] = new Reserva(reserva);
         tamano++;
@@ -59,7 +60,7 @@ public class Reservas {
 
     private int buscarIndice(Reserva reserva) {
         if (reserva == null)
-            throw new NullPointerException("reserva nulo buscarindice");
+            throw new NullPointerException("La reserva a buscar no puede ser negativa (buscarIndice)");
 
         int indice = -1;
 
@@ -73,20 +74,20 @@ public class Reservas {
 
     private boolean tamanoSuperado(int indice){
         if (indice < 0)
-            throw new IllegalArgumentException("indice no puede ser negativo");
-        return (indice>=tamano);
+            throw new IllegalArgumentException("El índice no puede ser negativo(tamaño)");
+        return (indice>tamano);
     }
 
     private boolean capacidadSuperada(int indice){
         if (indice < 0)
-            throw new IllegalArgumentException("indice no puede ser negativo(capacidad)");
+            throw new IllegalArgumentException("El índice no puede ser negativo(capacidad)");
 
-        return (indice==capacidad);
+        return (indice>=capacidad);
     }
 
     public Reserva buscar(Reserva reserva){
         if (reserva == null)
-            throw new NullPointerException("reserva es nuuuuuulo buscar");
+            throw new NullPointerException("La reserva a buscar es Nula");
 
         if (buscarIndice(reserva) != -1)
             return coleccionReservas[buscarIndice(reserva)];
@@ -95,11 +96,11 @@ public class Reservas {
 
     }
 
-    public void borrar(Reserva reserva){
+    public void borrar(Reserva reserva)throws OperationNotSupportedException{
         if (reserva == null)
-            throw new NullPointerException("reserva nulo borrar");
+            throw new NullPointerException("ERROR: No se puede borrar una reserva nula.");
         if (buscarIndice(reserva) == -1)
-            throw new IllegalArgumentException("El reserva no está guardado");
+            throw new OperationNotSupportedException("ERROR: No existe ninguna reserva como la indicada.");
 
         int posicionBorrado = buscarIndice(reserva);
 
@@ -115,7 +116,7 @@ public class Reservas {
 
     private void desplazarUnaPosicionHaciaIzquierda(int indice){
         if (tamanoSuperado(indice)) //validado para negativo
-            throw new IllegalArgumentException("El indice supera el tamaño");
+            throw new IllegalArgumentException("El índice indicado supera el tamaño");
 
         coleccionReservas[indice-1] = new Reserva(coleccionReservas[indice]);
         coleccionReservas[indice] = null;
@@ -124,24 +125,29 @@ public class Reservas {
 
     public Reserva[] getReservas(Huesped huesped){
         if (coleccionReservas==null)
-            throw new NullPointerException("coleccion no creada aún");
+            throw new NullPointerException("La colección no ha sido creada aún");
         if (huesped == null)
-            throw new NullPointerException("huespednulo reserva");
+            throw new NullPointerException("ERROR: No se pueden buscar reservas de un huesped nulo.");
 
         Reserva[] copiaEspecial = new Reserva[this.capacidad];
+        int posicionVacia=0;
 
         for (int i=0; i < tamano; i++){
-            if (coleccionReservas[i].getHuesped().equals(huesped))
-                copiaEspecial[i]=new Reserva(coleccionReservas[i]);
+
+            if (coleccionReservas[i].getHuesped().equals(huesped)) {
+
+                copiaEspecial[posicionVacia] = new Reserva(coleccionReservas[i]);
+                posicionVacia++;
+            }
         }
         return copiaEspecial;
 
     }
     public Reserva[] getReservas(TipoHabitacion tipoHabitacion){
         if (coleccionReservas==null)
-            throw new NullPointerException("coleccion no creada aún");
+            throw new NullPointerException("La colección no ha sido creada aún");
         if (tipoHabitacion == null)
-            throw new NullPointerException("tipohabitacion null");
+            throw new NullPointerException("ERROR: No se pueden buscar reservas de un tipo de habitación nula.");
 
         Reserva[] copiaEspecial = new Reserva[this.capacidad];
 
@@ -153,15 +159,17 @@ public class Reservas {
     }
     public Reserva[] getReservasFuturas(Habitacion habitacion){
         if (coleccionReservas==null)
-            throw new NullPointerException("coleccion no creada aún");
+            throw new NullPointerException("La colección no ha sido creada aún");
         if (habitacion==null)
-            throw new NullPointerException("habitacion nula");
+            throw new NullPointerException("ERROR: No se pueden buscar reservas de una habitación nula.");
 
         Reserva[] copiaEspecial = new Reserva[this.capacidad];
-
+        int posicionVacia=0;
         for (int i=0; i < tamano; i++){
-            if (coleccionReservas[i].getFechaInicioReserva().isAfter(LocalDate.now()))
-                copiaEspecial[i]=new Reserva(coleccionReservas[i]);
+            if (coleccionReservas[i].getFechaInicioReserva().isAfter(LocalDate.now()) && coleccionReservas[i].getHabitacion().equals(habitacion)) {
+                copiaEspecial[posicionVacia] = new Reserva(coleccionReservas[i]);
+                posicionVacia++;
+            }
         }
         return copiaEspecial;
     }

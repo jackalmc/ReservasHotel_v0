@@ -10,7 +10,7 @@ public class Reserva {
     public static final int MAX_NUMERO_MESES_RESERVA = 6;
     private static final int MAX_HORAS_POSTERIOR_CHECKOUT = 12;
     public static final String FORMATO_FECHA_RESERVA = "dd/MM/yyyy";
-    public static final String FORMATO_FECHA_HORA_RESERVA = "dd/MM/yyyy hh:MM:ss";
+    public static final String FORMATO_FECHA_HORA_RESERVA = "dd/MM/yyyy hh:mm:ss";
     private Huesped huesped;
     private Habitacion habitacion;
     private Regimen regimen;
@@ -116,7 +116,7 @@ public class Reserva {
     private void setPrecio() {
 
         Period period = Period.between(fechaInicioReserva,fechaFinReserva);
-        precio = (habitacion.getPrecio() * period.getDays()) + (regimen.getIncrementoPrecio() * numeroPersonas);
+        precio = (habitacion.getPrecio() * period.getDays()) + (regimen.getIncrementoPrecio() * numeroPersonas * period.getDays());
     }
 
     public int getNumeroPersonas() {

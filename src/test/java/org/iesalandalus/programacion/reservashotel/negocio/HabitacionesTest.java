@@ -1,6 +1,7 @@
 package org.iesalandalus.programacion.reservashotel.negocio;
 
 
+import org.iesalandalus.programacion.reservashotel.MainApp;
 import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
 import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
 import org.junit.jupiter.api.BeforeAll;
