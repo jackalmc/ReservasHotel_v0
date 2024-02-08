@@ -106,7 +106,7 @@ public class Reservas {
 
         coleccionReservas[posicionBorrado] = null;
         if (posicionBorrado != tamano-1){
-            for (int i = posicionBorrado+1; i< tamano-1; i++)
+            for (int i = posicionBorrado; i< tamano-1; i++)
                 desplazarUnaPosicionHaciaIzquierda(i);
         }
         tamano--;
@@ -118,8 +118,8 @@ public class Reservas {
         if (tamanoSuperado(indice)) //validado para negativo
             throw new IllegalArgumentException("El índice indicado supera el tamaño");
 
-        coleccionReservas[indice-1] = new Reserva(coleccionReservas[indice]);
-        coleccionReservas[indice] = null;
+        coleccionReservas[indice] = new Reserva(coleccionReservas[indice+1]);
+        coleccionReservas[indice+1] = null;
 
     }
 
@@ -150,10 +150,13 @@ public class Reservas {
             throw new NullPointerException("ERROR: No se pueden buscar reservas de un tipo de habitación nula.");
 
         Reserva[] copiaEspecial = new Reserva[this.capacidad];
+        int posicionVacia=0;
 
         for (int i=0; i < tamano; i++){
-            if (coleccionReservas[i].getHabitacion().getTipoHabitacion().equals(tipoHabitacion))
-                copiaEspecial[i]=new Reserva(coleccionReservas[i]);
+            if (coleccionReservas[i].getHabitacion().getTipoHabitacion().equals(tipoHabitacion)) {
+                copiaEspecial[posicionVacia] = new Reserva(coleccionReservas[i]);
+                posicionVacia++;
+            }
         }
         return copiaEspecial;
     }

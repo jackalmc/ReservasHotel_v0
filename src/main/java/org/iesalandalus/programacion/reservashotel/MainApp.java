@@ -1,10 +1,7 @@
 package org.iesalandalus.programacion.reservashotel;
 
 
-import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
-import org.iesalandalus.programacion.reservashotel.dominio.Huesped;
-import org.iesalandalus.programacion.reservashotel.dominio.Reserva;
-import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
+import org.iesalandalus.programacion.reservashotel.dominio.*;
 import org.iesalandalus.programacion.reservashotel.negocio.Habitaciones;
 import org.iesalandalus.programacion.reservashotel.negocio.Huespedes;
 import org.iesalandalus.programacion.reservashotel.negocio.Reservas;
@@ -21,7 +18,7 @@ public class MainApp {
     public final static int  CAPACIDAD=6;
     private static Habitaciones habitaciones = new Habitaciones(CAPACIDAD);
     private static Reservas reservas = new Reservas(CAPACIDAD);;
-    private static Huespedes huespedes = new Huespedes(CAPACIDAD);
+    public static Huespedes huespedes = new Huespedes(CAPACIDAD);
     private static boolean salir = false;
 
     private static void ejecutarOpcion(Opcion opcion){
@@ -42,14 +39,19 @@ public class MainApp {
             case MOSTRAR_HABITACIONES -> mostrarHabitaciones();
             case CONSULTAR_DISPONIBILIDAD -> System.out.println(consultarDisponibilidad(Consola.leerTipoHabitacion(), Consola.leerFecha(Entrada.cadena()), Consola.leerFecha(Entrada.cadena())));
             case SALIR -> salir=true;
+            case DEBUG -> debug();
         }
     }
 
     private static void insertarHuesped(){
         try{
             huespedes.insertar(Consola.leerHuesped());
+            System.out.println(" ");
+            System.out.println("*****");
             System.out.println("Huésped insertado!!!");
-        }catch (OperationNotSupportedException e){
+            System.out.println("*****");
+            System.out.println(" ");
+        }catch (NullPointerException|IllegalArgumentException|OperationNotSupportedException e){
             System.out.println(e.getMessage());
         }
 
@@ -63,8 +65,13 @@ public class MainApp {
     private static void borrarHuesped(){
         try{
             huespedes.borrar(Consola.getHuespedPorDni());
+            System.out.println(" ");
+            System.out.println("*****");
             System.out.println("Huesped borrado!!!");
-        }catch (OperationNotSupportedException e){
+            System.out.println("*****");
+            System.out.println(" ");
+
+        }catch (NullPointerException|IllegalArgumentException|OperationNotSupportedException e){
             System.out.println(e.getMessage());
         }
 
@@ -89,21 +96,35 @@ public class MainApp {
     private static void insertarHabitacion(){
         try{
             habitaciones.insertar(Consola.leerHabitacion());
+            System.out.println(" ");
+            System.out.println("*****");
             System.out.println("Habitación insertada!!!");
-        }catch (OperationNotSupportedException e){
+            System.out.println("*****");
+            System.out.println(" ");
+        }catch (NullPointerException|IllegalArgumentException|OperationNotSupportedException e){
             System.out.println(e.getMessage());
         }
     }
 
     private static void buscarHabitacion(){
-        System.out.println(habitaciones.buscar(Consola.leerHabitacionPorIdentificador()));
+        try{
+            System.out.println(habitaciones.buscar(Consola.leerHabitacionPorIdentificador()));
+
+        }catch (NullPointerException|IllegalArgumentException e){
+            System.out.println(e.getMessage());
+
+        }
     }
 
     private static void borrarHabitacion(){
         try{
             habitaciones.borrar(Consola.leerHabitacionPorIdentificador());
+            System.out.println(" ");
+            System.out.println("*****");
             System.out.println("Habitación borrada!!!");
-        }catch (OperationNotSupportedException e){
+            System.out.println("*****");
+            System.out.println(" ");
+        }catch (NullPointerException|IllegalArgumentException|OperationNotSupportedException e){
             System.out.println(e.getMessage());
         }
 
@@ -125,13 +146,22 @@ public class MainApp {
     }
     private static void insertarReserva(){
         Reserva habitacionDeseada = Consola.leerReserva();
-       // if (consultarDisponibilidad(habitacionDeseada.getHabitacion().getTipoHabitacion(), habitacionDeseada.getFechaInicioReserva(), habitacionDeseada.getFechaFinReserva()).equals(habitacionDeseada.getHabitacion()))
-            try{
+        if (consultarDisponibilidad(habitacionDeseada.getHabitacion().getTipoHabitacion(), habitacionDeseada.getFechaInicioReserva(), habitacionDeseada.getFechaFinReserva()) == null) {
+
+            try {
                 reservas.insertar(habitacionDeseada);
+                System.out.println(" ");
+                System.out.println("*****");
                 System.out.println("Reserva insertada!!!");
-            } catch(OperationNotSupportedException e){
+                System.out.println("*****");
+                System.out.println(" ");
+            } catch (NullPointerException|IllegalArgumentException|OperationNotSupportedException e) {
                 System.out.println(e.getMessage());
             }
+
+        } else {
+            System.out.println("No está disponible");
+        }
 
     }
 
@@ -168,43 +198,93 @@ public class MainApp {
     }
 
     private static Reserva[] getReservasAnulables(Reserva[] reservasAAnular){
-        //
-        Reserva[] listaAnulables = new Reserva[reservasAAnular.length];
+
+        int tamano = 0;
+        for (Reserva reserva:reservasAAnular)
+            if (reserva != null)
+                tamano++;
+
+        Reserva[] listaAnulables = new Reserva[tamano];
+
         int posicion=0;
 
-        for (int i=0; i < reservasAAnular.length; i++){
-            if (reservasAAnular[i].getFechaInicioReserva().isAfter(LocalDate.now()))
-                listaAnulables[posicion]=new Reserva(reservasAAnular[i]);
+        for (int i=0; i < listaAnulables.length; i++){
+            if (reservasAAnular[i].getFechaInicioReserva().isAfter(LocalDate.now())) {
+
+                listaAnulables[posicion] = new Reserva(reservasAAnular[i]);
                 posicion++;
+            }
         }
+        //for (Reserva reserva:listaAnulables)
+        //    System.out.println("debug: listaanulables"+reserva);
         return listaAnulables;
+    }
+
+
+    private static void debug(){
+        Huesped huesped1 = new Huesped("pepe felices", "22222222J", "aaaa@aaaa.com", "950262626", LocalDate.of(1950,1,1));
+        Huesped huesped2 = new Huesped("carlos salfredo", "11111111H", "bbbb@bbbb.com", "650151515", LocalDate.of(1975,1,1));
+        Habitacion habitacion1 = new Habitacion(1,1,100,TipoHabitacion.TRIPLE);
+        Habitacion habitacion2 = new Habitacion(1,2,100,TipoHabitacion.TRIPLE);
+        LocalDate inicio1 = LocalDate.of(2024,2,15);
+        LocalDate fin1 = LocalDate.of(2024,2,20);
+        LocalDate inicio2 = LocalDate.of(2024,4,15);
+        LocalDate fin2 = LocalDate.of(2024,4,20);
+        Reserva reserva1 = new Reserva(huesped1, habitacion1, Regimen.MEDIA_PENSION, inicio1, fin1, 2);
+        Reserva reserva2 = new Reserva(huesped2, habitacion2, Regimen.MEDIA_PENSION, inicio1, fin1, 2);
+        Reserva reserva3 = new Reserva(huesped1, habitacion2, Regimen.MEDIA_PENSION, inicio2, fin2, 2);
+        Reserva reserva4 = new Reserva(huesped2, habitacion1, Regimen.MEDIA_PENSION, inicio2, fin2, 2);
+
+        try {
+            huespedes.insertar(huesped1);
+            huespedes.insertar(huesped2);
+            habitaciones.insertar(habitacion1);
+            habitaciones.insertar(habitacion2);
+            reservas.insertar(reserva1);
+            reservas.insertar(reserva2);
+            reservas.insertar(reserva3);
+            reservas.insertar(reserva4);
+        }catch(OperationNotSupportedException e){
+            System.out.println(e.getMessage());
+        }
+        System.out.println("***DATOS DE PRUEBA INSERTADOS***");
     }
 
     private static void anularReserva(){
 
-        Huesped huesped = Consola.getHuespedPorDni();
-        Reserva [] lista = getReservasAnulables(reservas.getReservas(huesped));
+        Huesped cliente = Consola.getHuespedPorDni();
+        Reserva [] lista = reservas.getReservas(cliente);
+        //System.out.println("DEBUG: length "+lista.length);
+
+        //for (Reserva reserva:lista)
+        //    System.out.println("DEBUG: anular"+reserva);
+
+        lista = getReservasAnulables(lista);
+
         if (getNumElementosNoNulos(lista) == 0)
-            System.out.println("No tiene reservas");
+            System.out.println("No tiene reservas anulables");
         else if (getNumElementosNoNulos(lista) == 1) {
             String respuesta;
 
             do {
                 System.out.println("Confirma que quiere eliminar la reserva? (Si/No)");
-                respuesta = Entrada.cadena().toLowerCase();
-            } while (respuesta.compareTo("si") != 0 || respuesta.compareTo("no") != 0);
+                respuesta = Entrada.cadena();
+            } while (!respuesta.equalsIgnoreCase("si") && !respuesta.equalsIgnoreCase("no"));
 
-            try {
-                reservas.borrar(lista[0]);
-            } catch (OperationNotSupportedException e){
-                System.out.println(e.getMessage());
-            }
+
+            if (respuesta.equalsIgnoreCase("si"))
+                try {
+                    reservas.borrar(lista[0]);
+                    System.out.println("**Reserva Eliminada!!!**");
+                } catch (NullPointerException|IllegalArgumentException|OperationNotSupportedException e){
+                    System.out.println(e.getMessage());
+                }
 
 
         } else {
             //mostrar todas las posibilidades
             for  (int i = 0; i< getNumElementosNoNulos(lista) ; i++)
-                System.out.println("%s - " + lista[i]);
+                System.out.println(i + " - " + lista[i]);
 
             //elegir option
             System.out.println("-------------");
@@ -214,10 +294,11 @@ public class MainApp {
                 eleccion = Entrada.entero();
             }while (eleccion <0 || eleccion > lista.length);
 
-            //borrar reserva de la coleccion usando la posición de la lista nueva.
+            //borrar reserva de la colección usando la posición de la lista nueva.
             try{
                 reservas.borrar(lista[eleccion]);
-            }catch (OperationNotSupportedException e){
+                System.out.println("**Reserva Eliminada!!!**");
+            }catch (NullPointerException|IllegalArgumentException|OperationNotSupportedException e){
                 System.out.println(e.getMessage());
             }
 
@@ -325,15 +406,16 @@ public class MainApp {
 
     private static int getNumElementosNoNulos(Reserva[] reservas){
         int numero=0;
-        for (int i=0; i<reservas.length; i++)
-            if (reservas[i]!= null)
+        for (int i=0; i<reservas.length; i++) {
+            if (reservas[i] != null)
                 numero++;
+        }
+
 
         return numero;
     }
     
     public static void main(String[] args) {
-
 
 
         while(!salir) {

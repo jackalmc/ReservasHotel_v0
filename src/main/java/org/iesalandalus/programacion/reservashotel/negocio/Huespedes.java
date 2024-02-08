@@ -1,6 +1,7 @@
 package org.iesalandalus.programacion.reservashotel.negocio;
 
 import org.iesalandalus.programacion.reservashotel.dominio.Huesped;
+import org.iesalandalus.programacion.reservashotel.dominio.Reserva;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -71,6 +72,7 @@ public class Huespedes {
     private boolean tamanoSuperado(int indice){
         if (indice < 0)
             throw new IllegalArgumentException("El índice no puede ser negativo(tamaño)");
+
         return (indice>tamano);
     }
 
@@ -102,7 +104,7 @@ public class Huespedes {
 
         coleccionHuespedes[posicionBorrado] = null;
         if (posicionBorrado != tamano-1){
-            for (int i = posicionBorrado+1; i< tamano-1; i++)
+            for (int i = posicionBorrado; i< tamano-1; i++)
                 desplazarUnaPosicionHaciaIzquierda(i);
         }
         tamano--;
@@ -114,8 +116,8 @@ public class Huespedes {
         if (tamanoSuperado(indice)) //validado para negativo
             throw new IllegalArgumentException("El indice supera el tamaño");
 
-        coleccionHuespedes[indice-1] = new Huesped(coleccionHuespedes[indice]);
-        coleccionHuespedes[indice] = null;
+        coleccionHuespedes[indice] = new Huesped(coleccionHuespedes[indice+1]);
+        coleccionHuespedes[indice+1] = null;
 
     }
 

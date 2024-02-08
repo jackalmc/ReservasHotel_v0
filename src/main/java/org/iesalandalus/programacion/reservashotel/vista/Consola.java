@@ -8,54 +8,32 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.iesalandalus.programacion.reservashotel.MainApp.huespedes;
+
 public class Consola {
 
     private Consola(){}
 
     public static void mostrarMenu(){
-        System.out.println(Opcion.INSERTAR_HUESPED);
-        System.out.println(Opcion.BUSCAR_HUESPED);
-        System.out.println(Opcion.BORRAR_HUESPED);
-        System.out.println(Opcion.MOSTRAR_HUESPEDES);
-        System.out.println(Opcion.INSERTAR_HABITACION);
-        System.out.println(Opcion.BUSCAR_HABITACION);
-        System.out.println(Opcion.BORRAR_HABITACION);
-        System.out.println(Opcion.MOSTRAR_HABITACIONES);
-        System.out.println(Opcion.INSERTAR_RESERVA);
-        System.out.println(Opcion.ANULAR_RESERVA);
-        System.out.println(Opcion.MOSTRAR_RESERVAS);
-        System.out.println(Opcion.CONSULTAR_DISPONIBILIDAD);
-        System.out.println(Opcion.SALIR);
-        //System.out.println("---------------");
+
+        for (Opcion opcion : Opcion.values())
+            System.out.println(opcion);
+
         System.out.println(" ");
-        //System.out.print("Elegir la opción deseada: ");
+
     }
 
     public static Opcion elegirOpcion(){
         System.out.println("---------------");
         System.out.println(" ");
-        int opcion;
+        int numeroOpcion;
+
         do{
             System.out.print("Elegir la opción deseada: ");
-            opcion = Entrada.entero();
-        }while(opcion < 0 || opcion > 12);
+            numeroOpcion = Entrada.entero();
+        }while(numeroOpcion < 0 || numeroOpcion > Opcion.values().length);
 
-        return switch (opcion) {
-            case 1 -> Opcion.INSERTAR_HUESPED;
-            case 2 -> Opcion.BUSCAR_HUESPED;
-            case 3 -> Opcion.BORRAR_HUESPED;
-            case 4 -> Opcion.MOSTRAR_HUESPEDES;
-            case 5 -> Opcion.INSERTAR_HABITACION;
-            case 6 -> Opcion.BUSCAR_HABITACION;
-            case 7 -> Opcion.BORRAR_HABITACION;
-            case 8 -> Opcion.MOSTRAR_HABITACIONES;
-            case 9 -> Opcion.INSERTAR_RESERVA;
-            case 10 -> Opcion.ANULAR_RESERVA;
-            case 11 -> Opcion.MOSTRAR_RESERVAS;
-            case 12 -> Opcion.CONSULTAR_DISPONIBILIDAD;
-            case 0 -> Opcion.SALIR;
-            default -> throw new IllegalStateException("Valor fuera de rango (0-12)");
-        };
+        return Opcion.values()[numeroOpcion];
     }
 
     public static Huesped leerHuesped(){
@@ -80,8 +58,11 @@ public class Consola {
     }
 
     public static Huesped getHuespedPorDni(){
+
         System.out.print("Introduzca DNI: ");
         String dni = Entrada.cadena();
+
+
         return new Huesped("Soy Un Dummy", dni, "ningun_sitio@ahi.ong","950000000", LocalDate.of(1990, 9, 9));
     }
 
@@ -143,62 +124,55 @@ public class Consola {
     }
 
     public static TipoHabitacion leerTipoHabitacion(){
-        TipoHabitacion tipoHabitacion = null;
         int opcion;
 
+        System.out.println("-----");
         System.out.println("Elige tipo de habitación: ");
-        System.out.println("1- "+TipoHabitacion.SIMPLE);
-        System.out.println("2- "+TipoHabitacion.DOBLE);
-        System.out.println("3- "+TipoHabitacion.TRIPLE);
-        System.out.println("4- "+TipoHabitacion.SUITE);
+
+        for (TipoHabitacion tipoHabitacion1: TipoHabitacion.values())
+            System.out.println(tipoHabitacion1);
+        System.out.println("-----");
+
         do{
             opcion = Entrada.entero();
-        }while (opcion<1 || opcion > 4);
+        }while (opcion<0 || opcion > TipoHabitacion.values().length);
 
-        switch (opcion){
-            case 1 -> tipoHabitacion=TipoHabitacion.SIMPLE;
-            case 2 -> tipoHabitacion=TipoHabitacion.DOBLE;
-            case 3 -> tipoHabitacion=TipoHabitacion.TRIPLE;
-            case 4 -> tipoHabitacion=TipoHabitacion.SUITE;
-        }
-        return tipoHabitacion;
+
+        return TipoHabitacion.values()[opcion];
     }
 
     public static Regimen leerRegimen(){
-        Regimen regimen = null;
         int opcion;
 
+        System.out.println("-----");
         System.out.println("Elige tipo de régimen: ");
-        System.out.println("1- "+Regimen.SOLO_ALOJAMIENTO);
-        System.out.println("2- "+Regimen.ALOJAMIENTO_DESAYUNO);
-        System.out.println("3- "+Regimen.MEDIA_PENSION);
-        System.out.println("4- "+Regimen.PENSION_COMPLETA);
+        for (Regimen regimen : Regimen.values())
+            System.out.println(regimen);
+        System.out.println("-----");
+
         do{
             opcion = Entrada.entero();
-        }while (opcion<1 || opcion > 4);
+        }while (opcion<0 || opcion > Regimen.values().length);
 
-        switch (opcion){
-            case 1 -> regimen=Regimen.SOLO_ALOJAMIENTO;
-            case 2 -> regimen=Regimen.ALOJAMIENTO_DESAYUNO;
-            case 3 -> regimen=Regimen.MEDIA_PENSION;
-            case 4 -> regimen=Regimen.PENSION_COMPLETA;
-        }
-        return regimen;
+        return Regimen.values()[opcion];
     }
 
     public static Reserva leerReserva(){
+
         Huesped huesped;
         Habitacion habitacion;
         Regimen regimen;
         LocalDate fechaInicio, fechaFin;
         int numeroPersonas;
 
-        huesped=leerHuesped();
+        huesped = Consola.getHuespedPorDni();
+        huesped = huespedes.buscar(huesped);
+
         habitacion=leerHabitacion();
         regimen=leerRegimen();
-        System.out.println("-|Fecha de entrada|-");
+        System.out.println("-|Fecha de entrada (dd/MM/yyyy) |-");
         fechaInicio=leerFecha(Entrada.cadena());
-        System.out.println("-|Fecha de salida|-");
+        System.out.println("-|Fecha de salida (dd/MM/yyyy) |-");
         fechaFin=leerFecha(Entrada.cadena());
         System.out.println("Introduce cuantas personas: ");
         numeroPersonas=Entrada.entero();

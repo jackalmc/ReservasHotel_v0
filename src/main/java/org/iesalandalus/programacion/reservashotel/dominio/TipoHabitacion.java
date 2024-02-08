@@ -17,9 +17,6 @@ public enum TipoHabitacion {
 
     @Override
     public String toString() {
-        return "TipoHabitacion{" +
-                "cadenaAMostrar='" + cadenaAMostrar + '\'' +
-                ", numeroMaximoPersonas=" + numeroMaximoPersonas +
-                '}';
+        return ordinal() + " .- " + cadenaAMostrar;
     }
 }

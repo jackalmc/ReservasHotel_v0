@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class Huesped {
 
     private final String ER_TELEFONO = "[0-9]{9}";
-    private final String ER_CORREO = "[\\w]+[@][A-Z a-z]+[.][A-Z a-z]+";
+    private final String ER_CORREO = ".+[@][A-Z a-z]+[.][A-Z a-z]+";
     private final String ER_DNI = "([0-9]{8})([A-Z a-z])";
     public static final String FORMATO_FECHA = "dd/MM/yyyy";
     private String nombre;

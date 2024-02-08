@@ -2,6 +2,7 @@ package org.iesalandalus.programacion.reservashotel.negocio;
 
 
 import org.iesalandalus.programacion.reservashotel.dominio.Habitacion;
+import org.iesalandalus.programacion.reservashotel.dominio.Reserva;
 import org.iesalandalus.programacion.reservashotel.dominio.TipoHabitacion;
 
 import javax.naming.OperationNotSupportedException;
@@ -30,9 +31,10 @@ public class Habitaciones {
 
         Habitacion[] copiaEspecial = new Habitacion[this.capacidad];
 
+        int posicion = 0;
         for (int i=0; i < tamano; i++){
             if (coleccionHabitaciones[i].getTipoHabitacion() == tipoHabitacion)
-                copiaEspecial[i]=new Habitacion(coleccionHabitaciones[i]);
+                copiaEspecial[posicion]=new Habitacion(coleccionHabitaciones[i]);
         }
         return copiaEspecial;
     }
@@ -86,6 +88,7 @@ public class Habitaciones {
     private boolean tamanoSuperado(int indice){
         if (indice < 0)
             throw new IllegalArgumentException("El índice no puede ser negativo(tamaño)");
+
         return (indice>tamano);
     }
 
@@ -117,7 +120,7 @@ public class Habitaciones {
 
         coleccionHabitaciones[posicionBorrado] = null;
         if (posicionBorrado != tamano-1){
-            for (int i = posicionBorrado+1; i< tamano-1; i++)
+            for (int i = posicionBorrado; i< tamano-1; i++)
                 desplazarUnaPosicionHaciaIzquierda(i);
         }
         tamano--;
@@ -129,8 +132,8 @@ public class Habitaciones {
         if (tamanoSuperado(indice)) //validado para negativo
             throw new IllegalArgumentException("El indice supera el tamaño");
 
-        coleccionHabitaciones[indice-1] = new Habitacion(coleccionHabitaciones[indice]);
-        coleccionHabitaciones[indice] = null;
+        coleccionHabitaciones[indice] = new Habitacion(coleccionHabitaciones[indice+1]);
+        coleccionHabitaciones[indice+1] = null;
 
     }
 
